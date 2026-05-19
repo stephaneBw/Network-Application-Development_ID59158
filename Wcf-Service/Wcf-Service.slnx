@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Wcf-Service.csproj" />
+  <Project Path="../Client-Application/HelloWcfClient/HelloWcfClient/HelloWcfClient.csproj" Id="fae3c225-bb27-4f3a-bd6e-cc12f1b4f406">
+    <BuildDependency Project="Wcf-Service.csproj" />
+  </Project>
+  <Project Path="Wcf-Service.csproj" Id="c1bab6c7-f147-4ac6-ab82-7542a967a9ea" />
 </Solution>

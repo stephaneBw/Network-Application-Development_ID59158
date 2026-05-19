@@ -1,9 +1,9 @@
 ﻿using System.ServiceModel;
 
-namespace Wcf_Service
+namespace HelloWcfService
 {
     [ServiceContract]
-    public interface IService1
+    public interface ICalculatorService
     {
         [OperationContract]
         int Add(int a, int b);

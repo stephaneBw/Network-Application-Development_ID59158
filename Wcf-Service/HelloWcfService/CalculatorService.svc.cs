@@ -1,6 +1,6 @@
-﻿namespace Wcf_Service
+﻿namespace HelloWcfService
 {
-    public class Service1 : IService1
+    public class CalculatorService : ICalculatorService
     {
         public int Add(int a, int b)
         {
