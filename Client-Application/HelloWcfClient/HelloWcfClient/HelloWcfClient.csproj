@@ -50,6 +50,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\NbpRef\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -62,12 +67,20 @@
     <None Include="Connected Services\CalculatorRef\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Connected Services\NbpRef\ExchangeRateService.wsdl" />
+    <None Include="Connected Services\NbpRef\ExchangeRateService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\NbpRef\ExchangeRateService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\CalculatorRef\" />
+    <WCFMetadataStorage Include="Connected Services\NbpRef\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\CalculatorRef\configuration91.svcinfo" />
@@ -77,6 +90,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\CalculatorRef\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NbpRef\ExchangeRateService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NbpRef\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NbpRef\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\NbpRef\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
