@@ -1,0 +1,29 @@
+# Currency Exchange Office — Architecture
+
+## Course
+Network Application Development
+
+## Author
+Stephane, Student ID: 59158
+
+## Components
+1. **ExchangeOffice.Service (WCF)** — entry point for all clients.
+2. **ExchangeOffice.Business** — exchange rules and user balances.
+3. **ExchangeOffice.Nbp** — calls Polish National Bank API for rates.
+4. **Client (WPF)** — added in Lab 8; talks to WCF only.
+5. **Database (SQL)** — added in Lab 11; stores users, transactions, balances.
+
+## Data we will store (later)
+- Users (username, password hash)
+- Balances per user per currency (PLN, USD, EUR, ...)
+- Transactions (buy, sell, top-up, date, amount, rate)
+
+## Main operations (WCF)
+- GetCurrentRate(currencyCode)
+- RegisterUser(username, password)
+- TopUpPln(userId, amount)
+- BuyCurrency(userId, currencyCode, amount)
+- SellCurrency(userId, currencyCode, amount)
+- GetBalance(userId, currencyCode)
+- GetTransactionHistory(userId)
+- GetHistoricalRates(currencyCode, fromDate, toDate)

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ExchangeOffice.Business/ExchangeOffice.Business.csproj" />
+  <Project Path="ExchangeOffice.Contracts/ExchangeOffice.Contracts.csproj" />
+  <Project Path="ExchangeOffice.Nbp/ExchangeOffice.Nbp.csproj" />
+  <Project Path="ExchangeOffice.Service/ExchangeOffice.Service.csproj" />
+</Solution>
