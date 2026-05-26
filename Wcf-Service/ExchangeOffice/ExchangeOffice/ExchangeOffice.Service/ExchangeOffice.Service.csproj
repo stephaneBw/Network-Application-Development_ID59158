@@ -68,7 +68,6 @@
     <Compile Include="ExchangeOfficeService.svc.cs">
       <DependentUpon>ExchangeOfficeService.svc</DependentUpon>
     </Compile>
-    <Compile Include="IExchangeOfficeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

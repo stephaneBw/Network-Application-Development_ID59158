@@ -1,44 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExchangeOffice.Contracts;
+using ExchangeOffice.Business; // Connects to your business layer domain
 
 namespace ExchangeOffice.Service
 {
-    public class ExchangeOfficeService : IExchangeOfficeService
+    public class ExchangeOfficeService : ExchangeOffice.Contracts.IExchangeOfficeService
     {
-        public void DoWork()
-        {
-            // Required by IExchangeOfficeService; no-op implementation.
-        }
+        // Reference our single, persistent memory manager instance
+        private readonly ExchangeOfficeManager _manager = ExchangeOfficeManager.Instance;
 
         public decimal GetCurrentRate(string currencyCode)
         {
-            throw new NotImplementedException("Lab 7");
+            // Hard-coded exchange rate rules for Lab 6 (until Lab 7 plugs in the bank)
+            if (string.Equals(currencyCode, "USD", StringComparison.OrdinalIgnoreCase)) return 4.0m;
+            if (string.Equals(currencyCode, "EUR", StringComparison.OrdinalIgnoreCase)) return 4.5m;
+            return 1.0m;
         }
 
         public int RegisterUser(string username, string password)
         {
-            throw new NotImplementedException("Lab 9");
+            return _manager.RegisterUser(username, password);
         }
 
         public void TopUpPln(int userId, decimal amount)
         {
-            throw new NotImplementedException("Lab 6");
+            _manager.TopUpPln(userId, amount);
         }
 
         public void BuyCurrency(int userId, string currencyCode, decimal foreignAmount)
         {
-            throw new NotImplementedException("Lab 6");
+            decimal rate = GetCurrentRate(currencyCode); // Uses our fixed 4.0m rate
+            _manager.BuyCurrency(userId, currencyCode, foreignAmount, rate);
         }
 
         public void SellCurrency(int userId, string currencyCode, decimal foreignAmount)
         {
-            throw new NotImplementedException("Lab 6");
+            decimal rate = GetCurrentRate(currencyCode);
+            _manager.SellCurrency(userId, currencyCode, foreignAmount, rate);
         }
 
         public decimal GetBalance(int userId, string currencyCode)
         {
-            throw new NotImplementedException("Lab 6");
+            return _manager.GetBalance(userId, currencyCode);
         }
 
         public List<TransactionDto> GetTransactionHistory(int userId)

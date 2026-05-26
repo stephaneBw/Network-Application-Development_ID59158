@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ExchangeOfficeService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ExchangeOffice.Contracts" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IExchangeOfficeService_GetCurrentRate_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentRate" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetCurrentRate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentRateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_RegisterUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUser" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_RegisterUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_TopUpPln_InputMessage">
+    <wsdl:part name="parameters" element="tns:TopUpPln" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_TopUpPln_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TopUpPlnResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_BuyCurrency_InputMessage">
+    <wsdl:part name="parameters" element="tns:BuyCurrency" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_BuyCurrency_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BuyCurrencyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_SellCurrency_InputMessage">
+    <wsdl:part name="parameters" element="tns:SellCurrency" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_SellCurrency_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SellCurrencyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetBalance_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetBalance" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetBalance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetBalanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetTransactionHistory_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTransactionHistory" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetTransactionHistory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTransactionHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetHistoricalRates_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHistoricalRates" />
+  </wsdl:message>
+  <wsdl:message name="IExchangeOfficeService_GetHistoricalRates_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHistoricalRatesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IExchangeOfficeService">
+    <wsdl:operation name="GetCurrentRate">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetCurrentRate" message="tns:IExchangeOfficeService_GetCurrentRate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetCurrentRateResponse" message="tns:IExchangeOfficeService_GetCurrentRate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/RegisterUser" message="tns:IExchangeOfficeService_RegisterUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/RegisterUserResponse" message="tns:IExchangeOfficeService_RegisterUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TopUpPln">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/TopUpPln" message="tns:IExchangeOfficeService_TopUpPln_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/TopUpPlnResponse" message="tns:IExchangeOfficeService_TopUpPln_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BuyCurrency">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/BuyCurrency" message="tns:IExchangeOfficeService_BuyCurrency_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/BuyCurrencyResponse" message="tns:IExchangeOfficeService_BuyCurrency_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SellCurrency">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/SellCurrency" message="tns:IExchangeOfficeService_SellCurrency_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/SellCurrencyResponse" message="tns:IExchangeOfficeService_SellCurrency_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBalance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetBalance" message="tns:IExchangeOfficeService_GetBalance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetBalanceResponse" message="tns:IExchangeOfficeService_GetBalance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTransactionHistory">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetTransactionHistory" message="tns:IExchangeOfficeService_GetTransactionHistory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetTransactionHistoryResponse" message="tns:IExchangeOfficeService_GetTransactionHistory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHistoricalRates">
+      <wsdl:input wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetHistoricalRates" message="tns:IExchangeOfficeService_GetHistoricalRates_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IExchangeOfficeService/GetHistoricalRatesResponse" message="tns:IExchangeOfficeService_GetHistoricalRates_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IExchangeOfficeService" type="tns:IExchangeOfficeService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCurrentRate">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/GetCurrentRate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/RegisterUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TopUpPln">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/TopUpPln" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuyCurrency">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/BuyCurrency" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SellCurrency">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/SellCurrency" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBalance">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/GetBalance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTransactionHistory">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/GetTransactionHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHistoricalRates">
+      <soap:operation soapAction="http://tempuri.org/IExchangeOfficeService/GetHistoricalRates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ExchangeOfficeService">
+    <wsdl:port name="BasicHttpBinding_IExchangeOfficeService" binding="tns:BasicHttpBinding_IExchangeOfficeService">
+      <soap:address location="http://localhost:60456/ExchangeOfficeService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

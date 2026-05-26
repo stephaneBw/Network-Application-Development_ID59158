@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ExchangeOffice.Contracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ExchangeOffice.Contracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfTransactionDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TransactionDto" nillable="true" type="tns:TransactionDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfTransactionDto" nillable="true" type="tns:ArrayOfTransactionDto" />
+  <xs:complexType name="TransactionDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Rate" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TransactionDto" nillable="true" type="tns:TransactionDto" />
+  <xs:complexType name="ArrayOfRatePointDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RatePointDto" nillable="true" type="tns:RatePointDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRatePointDto" nillable="true" type="tns:ArrayOfRatePointDto" />
+  <xs:complexType name="RatePointDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Rate" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RatePointDto" nillable="true" type="tns:RatePointDto" />
+</xs:schema>
