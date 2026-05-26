@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExchangeOffice.Contracts;
-using ExchangeOffice.Business; // Connects to your business layer domain
+using ExchangeOffice.Business;
+using ExchangeOffice.Nbp; // Connects to your new bank client layer
 
 namespace ExchangeOffice.Service
 {
-    public class ExchangeOfficeService : ExchangeOffice.Contracts.IExchangeOfficeService
+    public class ExchangeOfficeService : IExchangeOfficeService
     {
-        // Reference our single, persistent memory manager instance
         private readonly ExchangeOfficeManager _manager = ExchangeOfficeManager.Instance;
+        private readonly NbpClient _nbpClient = new NbpClient(); // Live bank tracker
 
         public decimal GetCurrentRate(string currencyCode)
         {
-            // Hard-coded exchange rate rules for Lab 6 (until Lab 7 plugs in the bank)
-            if (string.Equals(currencyCode, "USD", StringComparison.OrdinalIgnoreCase)) return 4.0m;
-            if (string.Equals(currencyCode, "EUR", StringComparison.OrdinalIgnoreCase)) return 4.5m;
-            return 1.0m;
+            // Fetch live data directly from the National Bank of Poland API
+            return _nbpClient.GetCurrentRate(currencyCode);
         }
 
         public int RegisterUser(string username, string password)
@@ -30,14 +29,20 @@ namespace ExchangeOffice.Service
 
         public void BuyCurrency(int userId, string currencyCode, decimal foreignAmount)
         {
-            decimal rate = GetCurrentRate(currencyCode); // Uses our fixed 4.0m rate
-            _manager.BuyCurrency(userId, currencyCode, foreignAmount, rate);
+            // 1. Fetch live transaction rate from the bank server dynamically
+            decimal liveRate = GetCurrentRate(currencyCode);
+
+            // 2. Process exchange using the real rate matrix
+            _manager.BuyCurrency(userId, currencyCode, foreignAmount, liveRate);
         }
 
         public void SellCurrency(int userId, string currencyCode, decimal foreignAmount)
         {
-            decimal rate = GetCurrentRate(currencyCode);
-            _manager.SellCurrency(userId, currencyCode, foreignAmount, rate);
+            // 1. Fetch live transaction rate from the bank server dynamically
+            decimal liveRate = GetCurrentRate(currencyCode);
+
+            // 2. Process exchange using the real rate matrix
+            _manager.SellCurrency(userId, currencyCode, foreignAmount, liveRate);
         }
 
         public decimal GetBalance(int userId, string currencyCode)
