@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="8ddc065f-7073-4fd1-8f58-d685308575c6" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:60456/ExchangeOfficeService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ExchangeOfficeService.xsd" MetadataType="Schema" ID="6ccd650f-6cad-4b3d-8049-d76d438f8249" SourceId="1" SourceUrl="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ExchangeOfficeService.disco" MetadataType="Disco" ID="eba7b3b0-5fef-49a4-8e6a-96e4bd7215d4" SourceId="1" SourceUrl="http://localhost:60456/ExchangeOfficeService.svc?disco" />
+    <MetadataFile FileName="ExchangeOfficeService.wsdl" MetadataType="Wsdl" ID="2f52eca5-be64-404a-a44e-110e3d663261" SourceId="1" SourceUrl="http://localhost:60456/ExchangeOfficeService.svc?wsdl" />
+    <MetadataFile FileName="ExchangeOfficeService1.xsd" MetadataType="Schema" ID="35e1b833-0096-4c1a-9176-effcba0c5078" SourceId="1" SourceUrl="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ExchangeOfficeService2.xsd" MetadataType="Schema" ID="945fdc97-3887-4e31-a059-d52e11c856c4" SourceId="1" SourceUrl="http://localhost:60456/ExchangeOfficeService.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
