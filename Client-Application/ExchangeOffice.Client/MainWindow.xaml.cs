@@ -12,28 +12,75 @@ namespace ExchangeOffice.Client
         public MainWindow()
         {
             InitializeComponent();
+            ToggleTradingInterface(false); // Buttons start locked out by default
         }
 
-        // Step 2 — Helper: Ensure the active process contains an authentic registration tracking identity
-        private bool EnsureLoggedIn()
+        // Feature 2: Helper to turn trading desk buttons on or off automatically
+        private void ToggleTradingInterface(bool isEnabled)
         {
-            if (_currentUserId == null)
-            {
-                MessageBox.Show("Operational Lockout: Please establish an active User Account Registration identity first (Lab 9).", "Authentication Required", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
+            TopUpButton.IsEnabled = isEnabled;
+            BuyButton.IsEnabled = isEnabled;
+            SellButton.IsEnabled = isEnabled;
         }
 
-        // Step 3 — Handlers implementation
+        // Feature 6: Centralized status bar messaging engine
+        private void LogMessage(string message, bool isError = false)
+        {
+            if (isError)
+            {
+                GlobalErrorTextBlock.Text = message;
+                UserStatusTextBlock.Text = "Status: Transaction Error";
+                UserStatusTextBlock.Foreground = Brushes.Red;
+            }
+            else
+            {
+                GlobalErrorTextBlock.Text = string.Empty; // clear previous errors
+                UserStatusTextBlock.Text = $"Status: Logged In (ID: {_currentUserId})";
+                UserStatusTextBlock.Foreground = Brushes.Green;
+            }
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            string username = UsernameTextBox.Text.Trim();
+            string password = PasswordBox.Password;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Please enter both a username and a password.", "Input Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                var client = new ExchangeOfficeServiceClient();
+                int userId = client.RegisterUser(username, password);
+                client.Close();
+
+                _currentUserId = userId;
+
+                // Unlock the interface and clear fields
+                ToggleTradingInterface(true);
+                LogMessage("Account created successfully!");
+                RefreshBalances();
+
+                MessageBox.Show($"Welcome, {username}!\nYour account ID is: {userId}", "Registration Confirmed", MessageBoxButton.OK, MessageBoxImage.Information);
+                UsernameTextBox.Text = string.Empty;
+                PasswordBox.Password = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Registration failed.", true);
+                MessageBox.Show(ex.Message, "WCF Link Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void TopUpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!EnsureLoggedIn()) return;
-
-            // Culture-safe string-to-decimal calculation filters
-            if (!decimal.TryParse(TopUpTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
+            // Feature 3: Safe Parsing validation instead of unhandled app crashes
+            if (!decimal.TryParse(TopUpTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || amount <= 0)
             {
-                MessageBox.Show("Input Validation Error: Please enter a valid numerical balance layout format.", "Parsing Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage("Error: Invalid deposit amount entry.", true);
                 return;
             }
 
@@ -43,23 +90,21 @@ namespace ExchangeOffice.Client
                 client.TopUpPln(_currentUserId.Value, amount);
                 client.Close();
 
-                MessageBox.Show($"Successfully deposited {amount:N2} PLN into your account allocation memory.", "Deposit Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                LogMessage($"Deposited {amount:N2} PLN cleanly.");
                 RefreshBalances();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Top-up transaction failed: " + ex.Message, "WCF System Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage(ex.Message, true);
             }
         }
 
         private void BuyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!EnsureLoggedIn()) return;
-
-            string currency = TradeCurrencyTextBox.Text.Trim();
-            if (!decimal.TryParse(TradeAmountTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
+            string currency = TradeCurrencyTextBox.Text.Trim().ToUpper();
+            if (!decimal.TryParse(TradeAmountTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || amount <= 0)
             {
-                MessageBox.Show("Input Validation Error: Invalid foreign quantity metric.", "Parsing Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage("Error: Invalid transaction balance volume.", true);
                 return;
             }
 
@@ -69,23 +114,21 @@ namespace ExchangeOffice.Client
                 client.BuyCurrency(_currentUserId.Value, currency, amount);
                 client.Close();
 
-                MessageBox.Show($"Trade Executed: Successfully purchased {amount} {currency.ToUpper()} using live market rate matrices.", "Purchase Confirmed", MessageBoxButton.OK, MessageBoxImage.Information);
+                LogMessage($"Successfully purchased {amount} {currency}!");
                 RefreshBalances();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Purchase execution transaction failed:\n" + ex.Message, "Exchange Engine Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage(ex.Message, true);
             }
         }
 
         private void SellButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!EnsureLoggedIn()) return;
-
-            string currency = TradeCurrencyTextBox.Text.Trim();
-            if (!decimal.TryParse(TradeAmountTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
+            string currency = TradeCurrencyTextBox.Text.Trim().ToUpper();
+            if (!decimal.TryParse(TradeAmountTextBox.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || amount <= 0)
             {
-                MessageBox.Show("Input Validation Error: Invalid foreign quantity metric.", "Parsing Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage("Error: Invalid transaction volume entry.", true);
                 return;
             }
 
@@ -95,92 +138,55 @@ namespace ExchangeOffice.Client
                 client.SellCurrency(_currentUserId.Value, currency, amount);
                 client.Close();
 
-                MessageBox.Show($"Trade Executed: Successfully liquidated {amount} {currency.ToUpper()} back to the exchange reserves.", "Liquidation Confirmed", MessageBoxButton.OK, MessageBoxImage.Information);
+                LogMessage($"Successfully sold {amount} {currency}!");
                 RefreshBalances();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Liquidation execution transaction failed:\n" + ex.Message, "Exchange Engine Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogMessage(ex.Message, true);
             }
-        }
-
-        private void RefreshBalancesButton_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshBalances();
         }
 
         private void RefreshBalances()
         {
-            if (!EnsureLoggedIn()) return;
+            if (_currentUserId == null) return;
 
             try
             {
                 var client = new ExchangeOfficeServiceClient();
-
-                // Fetch independent allocations directly from core service RAM dictionary structures
                 decimal pln = client.GetBalance(_currentUserId.Value, "PLN");
                 decimal usd = client.GetBalance(_currentUserId.Value, "USD");
                 decimal eur = client.GetBalance(_currentUserId.Value, "EUR");
-
                 client.Close();
 
-                BalancesTextBlock.Text = $"CURRENT USER ID: {_currentUserId.Value}\n" +
-                                         $"--------------------------------\n" +
-                                         $"PLN Balance: {pln:N4} PLN\n" +
-                                         $"USD Balance: {usd:N4} USD\n" +
-                                         $"EUR Balance: {eur:N4} EUR";
+                // Feature 4: Format balances cleanly onto always-visible side tracker panel
+                BalancesTextBlock.Text = $"PLN: {pln:N2} | USD: {usd:N2} | EUR: {eur:N2}";
             }
             catch (Exception ex)
             {
-                BalancesTextBlock.Text = "Error communicating with accounting balance ledger: " + ex.Message;
+                BalancesTextBlock.Text = "Ledger Connection Offline";
+                LogMessage("Could not sync ledger balances.", true);
             }
         }
 
-        // Lab 9: Account user establishment registration module
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string username = UsernameTextBox.Text.Trim();
-                string password = PasswordBox.Password;
-
-                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                {
-                    MessageBox.Show("Please enter both a username and a password.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                var client = new ExchangeOfficeServiceClient();
-                int userId = client.RegisterUser(username, password);
-                client.Close();
-
-                _currentUserId = userId;
-                UserStatusTextBlock.Text = $"Status: Logged In! Active Account ID: {userId}";
-                UserStatusTextBlock.Foreground = Brushes.Green;
-
-                RefreshBalances();
-                MessageBox.Show($"Welcome, {username}!\nYour unique account User ID is: {userId}", "Registration Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Registration pipeline failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        // Lab 8: Marketplace NBP lookup reference locator engine
         private void GetRateButton_Click(object sender, RoutedEventArgs e)
         {
+            string code = CurrencyTextBox.Text.Trim().ToUpper();
+            if (string.IsNullOrWhiteSpace(code)) return;
+
             try
             {
                 var client = new ExchangeOfficeServiceClient();
-                string code = CurrencyTextBox.Text.Trim();
                 decimal rate = client.GetCurrentRate(code);
-                RateTextBlock.Text = $"1 {code.ToUpper()} = {rate} PLN";
                 client.Close();
+
+                RateTextBlock.Text = $"1 {code} = {rate:N4} PLN";
+                LogMessage($"Fetched current {code} pricing rate successfully.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                RateTextBlock.Text = "Rate Unavailable";
+                LogMessage(ex.Message, true);
             }
         }
     }
