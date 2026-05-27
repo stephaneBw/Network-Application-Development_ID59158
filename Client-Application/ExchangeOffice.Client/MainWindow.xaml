@@ -1,28 +1,22 @@
 ﻿<Window x:Class="ExchangeOffice.Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Exchange Office - Lab 9" Height="450" Width="400" WindowStartupLocation="CenterScreen">
+        Title="Exchange Office - Lab 10" Height="700" Width="420" WindowStartupLocation="CenterScreen">
     <ScrollViewer>
         <StackPanel Margin="20">
             <TextBlock Text="--- User Registration (Lab 9) ---" FontSize="14" FontWeight="Bold" Foreground="#2196F3"/>
-
             <TextBlock Text="Username:" Margin="0,10,0,0"/>
             <TextBox x:Name="UsernameTextBox" Margin="0,5,0,0" Padding="4"/>
-
             <TextBlock Text="Password:" Margin="0,10,0,0"/>
             <PasswordBox x:Name="PasswordBox" Margin="0,5,0,15" Padding="4"/>
-
             <Button Content="Register Account" Height="30" FontWeight="Bold" Background="#2196F3" Foreground="White" Click="RegisterButton_Click"/>
-
             <TextBlock x:Name="UserStatusTextBlock" Margin="0,10,0,15" Text="Status: Not logged in" Foreground="Gray" FontStyle="Italic"/>
 
-            <Separator Margin="0,10,0,20"/>
+            <Separator Margin="0,5,0,10"/>
 
             <TextBlock Text="--- Live Market Rates (Lab 8) ---" FontSize="14" FontWeight="Bold" Foreground="#4CAF50"/>
-
-            <TextBlock Text="Currency code (e.g. USD, EUR, GBP):" Margin="0,10,0,0" />
+            <TextBlock Text="Currency code (e.g. USD, EUR):" Margin="0,10,0,0" />
             <TextBox x:Name="CurrencyTextBox" Margin="0,5,0,10" Text="USD" Padding="4"/>
-
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -31,6 +25,36 @@
                 <Button Content="Get Current Rate" Width="140" Height="30" Click="GetRateButton_Click"/>
                 <TextBlock x:Name="RateTextBlock" Grid.Column="1" Margin="15,6,0,0" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
             </Grid>
+
+            <Separator Margin="0,15,0,15"/>
+
+            <TextBlock Text="--- Exchange Desk Operations (Lab 10) ---" FontSize="14" FontWeight="Bold" Foreground="#FF9800"/>
+
+            <TextBlock Text="Top-up PLN amount:" Margin="0,10,0,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="TopUpTextBox" Text="1000" Margin="0,5,0,0" Padding="4"/>
+            <Button Content="Deposit PLN Balance" Height="28" Background="#FF9800" Foreground="White" FontWeight="SemiBold" Margin="0,8,0,15" Click="TopUpButton_Click"/>
+
+            <TextBlock Text="Target Trading Currency:" Margin="0,5,0,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="TradeCurrencyTextBox" Text="USD" Margin="0,5,0,0" Padding="4"/>
+
+            <TextBlock Text="Foreign Amount to Exchange:" Margin="0,10,0,0" FontWeight="SemiBold"/>
+            <TextBox x:Name="TradeAmountTextBox" Text="100" Margin="0,5,0,0" Padding="4"/>
+
+            <Grid Margin="0,10,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Buy Currency" Grid.Column="0" Height="32" Background="#4CAF50" Foreground="White" FontWeight="Bold" Click="BuyButton_Click"/>
+                <Button Content="Sell Currency" Grid.Column="2" Height="32" Background="#F44336" Foreground="White" FontWeight="Bold" Click="SellButton_Click"/>
+            </Grid>
+
+            <Button Content="🔄 Refresh Live Balances" Height="30" FontWeight="SemiBold" Click="RefreshBalancesButton_Click"/>
+
+            <Border Margin="0,15,0,10" Padding="12" Background="#F5F5F5" CornerRadius="4" BorderBrush="#E0E0E0" BorderThickness="1">
+                <TextBlock x:Name="BalancesTextBlock" FontSize="13" FontFamily="Consolas" Text="Balances will appear here after registering/logging in." TextWrapping="Wrap"/>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </Window>
