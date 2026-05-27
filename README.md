@@ -21,3 +21,9 @@ Gradual build of a currency exchange office: WCF services, NBP rates, later WPF 
 ### Lab 5 — Exchange office (stub)
 1. Open `ExchangeOffice.sln`.
 2. Run `ExchangeOffice.Service` — service starts; methods not implemented until Lab 6+.
+
+### Labs 8–10 — WPF client
+1. Open `ExchangeOffice.sln`.
+2. Set multiple startup: `ExchangeOffice.Service` + `ExchangeOffice.Client`.
+3. Press F5.
+4. Register → Top up → Buy/Sell → Refresh balances.
