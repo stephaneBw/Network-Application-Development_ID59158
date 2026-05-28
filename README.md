@@ -9,7 +9,7 @@
 
 Online currency exchange office: **WCF** business service, **WPF** client, **SQL Server LocalDB** persistence, and **NBP** API for live and historical exchange rates.
 
-## Quick start (final project only)
+## Quick start 
 
 1. Clone this repository.
 2. Create the database (see [Database setup](#database-setup) below).
@@ -30,7 +30,7 @@ Online currency exchange office: **WCF** business service, **WPF** client, **SQL
 | 5 | Tab *Trading Desk* | Buy 100 USD, Sell 40 USD |
 | 6 | Tab *Trading Desk* | Refresh History — TopUp, Buy, Sell rows |
 
-## Repository layout (final vs archive)
+## Repository layout 
 
 ```
 CurrencyExchangeOffice.slnx          ← OPEN THIS (final product)
@@ -46,7 +46,7 @@ Wcf-Service/
 Database/
   schema.sql
 Documentation/
-Labs-Early/                          ← Labs 1–4 (not for grading)
+Labs-Early/                          ← Labs 1–4 
 NbpRatesService/                     ← Lab 2–4 archive
 Wcf-Service/HelloWcfService/         ← Lab 1 archive
 ```
