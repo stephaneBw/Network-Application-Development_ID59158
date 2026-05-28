@@ -90,6 +90,10 @@
       <Project>{0dad2cb2-6187-4271-8e2b-6b6f620ff9ae}</Project>
       <Name>ExchangeOffice.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExchangeOffice.Data\ExchangeOffice.Data.csproj">
+      <Project>{938db103-17e9-402a-a1f6-38a4b2037ff4}</Project>
+      <Name>ExchangeOffice.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExchangeOffice.Nbp\ExchangeOffice.Nbp.csproj">
       <Project>{8f17d126-4fbf-4278-9362-6f36e4ec93a3}</Project>
       <Name>ExchangeOffice.Nbp</Name>

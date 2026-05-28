@@ -1,125 +1,136 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Configuration;
+using ExchangeOffice.Data;
 
 namespace ExchangeOffice.Business
 {
     public class ExchangeOfficeManager
     {
-        // Thread-safe singleton pattern so the entire app shares the exact same RAM memory data
         private static readonly ExchangeOfficeManager _instance = new ExchangeOfficeManager();
         public static ExchangeOfficeManager Instance => _instance;
 
-        private readonly List<User> _users = new List<User>();
-        private readonly List<Transaction> _transactions = new List<Transaction>();
+        private readonly UserRepository _userRepo = new UserRepository();
+        private readonly BalanceRepository _balanceRepo = new BalanceRepository();
+        private readonly TransactionRepository _txRepo = new TransactionRepository();
 
-        // Maps "userId:CURRENCY" (e.g. "1:USD") to a numerical balance
-        private readonly Dictionary<string, decimal> _balances = new Dictionary<string, decimal>();
-        private int _nextUserId = 1;
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ExchangeOfficeDb"].ConnectionString;
 
-        private ExchangeOfficeManager() { } // Constructor hidden for singleton
+        private ExchangeOfficeManager() { }
 
-        // Helper to generate consistent keys for our memory dictionary
-        private string GetBalanceKey(int userId, string currencyCode)
+        // Secure baseline string password encoding converter block
+        private string HashPassword(string password)
         {
-            return $"{userId}:{currencyCode.Trim().ToUpperInvariant()}";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(password);
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+            {
+                var hash = sha.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
         }
 
         public int RegisterUser(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Username and password cannot be empty.");
+            if (_userRepo.UsernameExists(username))
+                throw new InvalidOperationException("Account registration error: Username is already taken.");
 
-            var user = new User { Id = _nextUserId++, Username = username, Password = password };
-            _users.Add(user);
-            return user.Id;
-        }
-
-        public void TopUpPln(int userId, decimal amount)
-        {
-            if (amount <= 0)
-                throw new ArgumentException("Top-up amount must be greater than zero.");
-
-            string key = GetBalanceKey(userId, "PLN");
-
-            if (!_balances.ContainsKey(key)) _balances[key] = 0;
-            _balances[key] += amount;
-
-            _transactions.Add(new Transaction
-            {
-                UserId = userId,
-                Date = DateTime.Now,
-                Type = "TopUp",
-                Currency = "PLN",
-                Amount = amount,
-                Rate = 1.0m
-            });
+            string passHash = HashPassword(password);
+            return _userRepo.CreateUser(username, passHash);
         }
 
         public decimal GetBalance(int userId, string currencyCode)
         {
-            string key = GetBalanceKey(userId, currencyCode);
-            return _balances.ContainsKey(key) ? _balances[key] : 0m;
+            return _balanceRepo.GetBalance(userId, currencyCode);
+        }
+
+        public void TopUpPln(int userId, decimal amount)
+        {
+            if (amount <= 0) throw new ArgumentException("Top-up amount must be greater than zero.");
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        _balanceRepo.AddToBalance(userId, "PLN", amount, conn, tx);
+                        _txRepo.AddTransaction(userId, "TopUp", "PLN", amount, 1.0m, conn, tx);
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         public void BuyCurrency(int userId, string currencyCode, decimal foreignAmount, decimal rate)
         {
-            if (foreignAmount <= 0) throw new ArgumentException("Amount must be greater than zero.");
-            if (rate <= 0) throw new ArgumentException("Invalid exchange rate.");
+            if (foreignAmount <= 0 || rate <= 0) throw new ArgumentException("Invalid financial trading parameters.");
+            string targetCurrency = currencyCode.Trim().ToUpper();
 
-            decimal costPln = foreignAmount * rate;
-            decimal userPln = GetBalance(userId, "PLN");
-
-            if (userPln < costPln)
-                throw new InvalidOperationException($"Insufficient PLN balance. Cost: {costPln} PLN, Available: {userPln} PLN.");
-
-            // Deduct PLN
-            _balances[GetBalanceKey(userId, "PLN")] -= costPln;
-
-            // Add Foreign Currency
-            string foreignKey = GetBalanceKey(userId, currencyCode);
-            if (!_balances.ContainsKey(foreignKey)) _balances[foreignKey] = 0m;
-            _balances[foreignKey] += foreignAmount;
-
-            // Record transaction log
-            _transactions.Add(new Transaction
+            using (var conn = new SqlConnection(_connectionString))
             {
-                UserId = userId,
-                Date = DateTime.Now,
-                Type = "Buy",
-                Currency = currencyCode.ToUpperInvariant(),
-                Amount = foreignAmount,
-                Rate = rate
-            });
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        decimal costPln = foreignAmount * rate;
+                        decimal currentPln = _balanceRepo.GetBalance(userId, "PLN");
+
+                        if (currentPln < costPln)
+                            throw new InvalidOperationException($"Insufficient funds. Cost: {costPln} PLN, Available: {currentPln} PLN.");
+
+                        _balanceRepo.AddToBalance(userId, "PLN", -costPln, conn, tx);
+                        _balanceRepo.AddToBalance(userId, targetCurrency, foreignAmount, conn, tx);
+                        _txRepo.AddTransaction(userId, "Buy", targetCurrency, foreignAmount, rate, conn, tx);
+
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         public void SellCurrency(int userId, string currencyCode, decimal foreignAmount, decimal rate)
         {
-            if (foreignAmount <= 0) throw new ArgumentException("Amount must be greater than zero.");
-            if (rate <= 0) throw new ArgumentException("Invalid exchange rate.");
+            if (foreignAmount <= 0 || rate <= 0) throw new ArgumentException("Invalid financial trading parameters.");
+            string targetCurrency = currencyCode.Trim().ToUpper();
 
-            string foreignKey = GetBalanceKey(userId, currencyCode);
-            decimal userForeignBalance = GetBalance(userId, currencyCode);
-
-            if (userForeignBalance < foreignAmount)
-                throw new InvalidOperationException($"Insufficient balance in {currencyCode.ToUpperInvariant()}.");
-
-            // Deduct Foreign Currency
-            _balances[foreignKey] -= foreignAmount;
-
-            // Add PLN
-            decimal gainPln = foreignAmount * rate;
-            _balances[GetBalanceKey(userId, "PLN")] += gainPln;
-
-            // Record transaction log
-            _transactions.Add(new Transaction
+            using (var conn = new SqlConnection(_connectionString))
             {
-                UserId = userId,
-                Date = DateTime.Now,
-                Type = "Sell",
-                Currency = currencyCode.ToUpperInvariant(),
-                Amount = foreignAmount,
-                Rate = rate
-            });
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        decimal currentForeign = _balanceRepo.GetBalance(userId, targetCurrency);
+                        if (currentForeign < foreignAmount)
+                            throw new InvalidOperationException($"Insufficient balance in portfolio for asset: {targetCurrency}.");
+
+                        decimal gainPln = foreignAmount * rate;
+
+                        _balanceRepo.AddToBalance(userId, targetCurrency, -foreignAmount, conn, tx);
+                        _balanceRepo.AddToBalance(userId, "PLN", gainPln, conn, tx);
+                        _txRepo.AddTransaction(userId, "Sell", targetCurrency, foreignAmount, rate, conn, tx);
+
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        tx.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }

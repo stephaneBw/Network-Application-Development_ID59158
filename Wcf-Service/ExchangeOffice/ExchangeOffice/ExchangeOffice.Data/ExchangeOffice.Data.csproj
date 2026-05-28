@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{106568E7-0DC1-4BF2-8434-986C7C106A27}</ProjectGuid>
+    <ProjectGuid>{938DB103-17E9-402A-A1F6-38A4B2037FF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExchangeOffice.Business</RootNamespace>
-    <AssemblyName>ExchangeOffice.Business</AssemblyName>
+    <RootNamespace>ExchangeOffice.Data</RootNamespace>
+    <AssemblyName>ExchangeOffice.Data</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -42,23 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExchangeOfficeManager.cs" />
+    <Compile Include="BalanceRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transaction.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="TransactionRepository.cs" />
+    <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExchangeOffice.Contracts\ExchangeOffice.Contracts.csproj">
       <Project>{0dad2cb2-6187-4271-8e2b-6b6f620ff9ae}</Project>
       <Name>ExchangeOffice.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExchangeOffice.Data\ExchangeOffice.Data.csproj">
-      <Project>{938db103-17e9-402a-a1f6-38a4b2037ff4}</Project>
-      <Name>ExchangeOffice.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExchangeOffice.Nbp\ExchangeOffice.Nbp.csproj">
-      <Project>{8f17d126-4fbf-4278-9362-6f36e4ec93a3}</Project>
-      <Name>ExchangeOffice.Nbp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,6 +4,7 @@
   </Project>
   <Project Path="ExchangeOffice.Business/ExchangeOffice.Business.csproj" Id="106568e7-0dc1-4bf2-8434-986c7c106a27" />
   <Project Path="ExchangeOffice.Contracts/ExchangeOffice.Contracts.csproj" Id="0dad2cb2-6187-4271-8e2b-6b6f620ff9ae" />
+  <Project Path="ExchangeOffice.Data/ExchangeOffice.Data.csproj" Id="938db103-17e9-402a-a1f6-38a4b2037ff4" />
   <Project Path="ExchangeOffice.Nbp/ExchangeOffice.Nbp.csproj" Id="8f17d126-4fbf-4278-9362-6f36e4ec93a3" />
   <Project Path="ExchangeOffice.Service/ExchangeOffice.Service.csproj" Id="484fafc3-96f7-47a6-8eb3-09006ac65bd8" />
   <Project Path="ExchangeOffice.TestClient/ExchangeOffice.TestClient.csproj" Id="647bf937-0463-45c4-9144-5c0ba12f10a2">
