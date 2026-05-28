@@ -13,6 +13,13 @@ namespace ExchangeOffice.Client
         {
             InitializeComponent();
             ToggleTradingInterface(false); // Buttons start locked out by default
+            InitializeHistoricalDatePickers();
+        }
+
+        private void InitializeHistoricalDatePickers()
+        {
+            HistoryToDatePicker.SelectedDate = DateTime.Today;
+            HistoryFromDatePicker.SelectedDate = DateTime.Today.AddDays(-7);
         }
 
         // Feature 2: Helper to turn trading desk buttons on or off automatically
@@ -36,8 +43,11 @@ namespace ExchangeOffice.Client
             else
             {
                 GlobalErrorTextBlock.Text = string.Empty; // clear previous errors
-                UserStatusTextBlock.Text = $"Status: Logged In (ID: {_currentUserId})";
-                UserStatusTextBlock.Foreground = Brushes.Green;
+                if (_currentUserId.HasValue)
+                {
+                    UserStatusTextBlock.Text = $"Status: Logged In (ID: {_currentUserId})";
+                    UserStatusTextBlock.Foreground = Brushes.Green;
+                }
             }
         }
 
@@ -206,6 +216,7 @@ namespace ExchangeOffice.Client
         private void GetRateButton_Click(object sender, RoutedEventArgs e)
         {
             string code = CurrencyTextBox.Text.Trim().ToUpper();
+            HistoricalCurrencyTextBox.Text = code;
             if (string.IsNullOrWhiteSpace(code)) return;
 
             try
@@ -221,6 +232,45 @@ namespace ExchangeOffice.Client
             {
                 RateTextBlock.Text = "Rate Unavailable";
                 LogMessage(ex.Message, true);
+            }
+        }
+
+        private void GetHistoricalRatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            string code = HistoricalCurrencyTextBox.Text.Trim().ToUpper();
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                LogMessage("Enter a currency code for historical rates.", true);
+                return;
+            }
+
+            if (!HistoryFromDatePicker.SelectedDate.HasValue || !HistoryToDatePicker.SelectedDate.HasValue)
+            {
+                LogMessage("Select both from and to dates.", true);
+                return;
+            }
+
+            DateTime from = HistoryFromDatePicker.SelectedDate.Value.Date;
+            DateTime to = HistoryToDatePicker.SelectedDate.Value.Date;
+            if (from > to)
+            {
+                LogMessage("'From' date cannot be after 'To' date.", true);
+                return;
+            }
+
+            try
+            {
+                var client = new ExchangeOfficeServiceClient();
+                var rates = client.GetHistoricalRates(code, from, to);
+                client.Close();
+
+                HistoricalRatesDataGrid.ItemsSource = rates ?? Array.Empty<RatePointDto>();
+                LogMessage($"Loaded {rates?.Length ?? 0} historical rate points for {code}.");
+            }
+            catch (Exception ex)
+            {
+                HistoricalRatesDataGrid.ItemsSource = null;
+                LogMessage("Historical rates failed: " + ex.Message, true);
             }
         }
     }

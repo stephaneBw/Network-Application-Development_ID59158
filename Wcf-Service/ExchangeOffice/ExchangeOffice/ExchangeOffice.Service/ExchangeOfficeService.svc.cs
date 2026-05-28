@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ExchangeOffice.Contracts;
 using ExchangeOffice.Business;
 using ExchangeOffice.Nbp; // Connects to your new bank client layer
@@ -57,7 +58,10 @@ namespace ExchangeOffice.Service
 
         public List<RatePointDto> GetHistoricalRates(string currencyCode, DateTime from, DateTime to)
         {
-            throw new NotImplementedException("Lab 13");
+            var points = _nbpClient.GetHistoricalRates(currencyCode, from, to);
+            return points
+                .Select(p => new RatePointDto { Date = p.Date, Rate = p.Rate })
+                .ToList();
         }
     }
 }
