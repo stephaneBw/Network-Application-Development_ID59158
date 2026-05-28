@@ -38,7 +38,7 @@ The system supports:
 
 ## Prerequisites
 
-- Windows with **Visual Studio 2022** (or newer)
+- Windows with **Visual Studio 2026** 
 - Workload: **.NET desktop development**
 - **.NET Framework 4.8**
 - **SQL Server LocalDB** (via Visual Studio Installer)
@@ -67,7 +67,7 @@ Data Source=(localdb)\ProjectModels;Initial Catalog=ExchangeOfficeDb;Integrated 
    - `ExchangeOffice.Client` → **Start**
 4. Press **F5**
 
-### Demo flow (for presentation / grading)
+### Demo flow (for presentation)
 
 | Step | Tab | Action |
 |------|-----|--------|
