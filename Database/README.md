@@ -1,35 +1,29 @@
 # Database setup
 
-## Create database
+## Values (must match Web.config)
 
-1. Visual Studio → **View → SQL Server Object Explorer**
-2. Connect to your LocalDB instance (example: `(localdb)\ProjectModels`)
-3. Right-click **Databases → Add New Database**
-4. Name: `ExchangeOfficeDb`
+| Item | Value |
+|------|--------|
+| Connection string **name** | `ExchangeOfficeDb` |
+| SQL **database name** | `ExchangeOfficeDb` |
+| SQL **instance** (default) | `(localdb)\MSSQLLocalDB` |
 
-## Apply schema
+## Steps
 
-1. Right-click `ExchangeOfficeDb` → **New Query**
-2. Open `schema.sql` from this folder, paste, execute
+1. Visual Studio → **SQL Server Object Explorer**
+2. Connect to `(localdb)\MSSQLLocalDB`
+3. **Databases** → Add New Database → `ExchangeOfficeDb`
+4. Right-click `ExchangeOfficeDb` → **New Query**
+5. Paste and execute `schema.sql`
 
-## Verify tables
+## Verify
 
-You should see:
+Tables: `Users`, `Balances`, `Transactions`
 
-- `dbo.Users`
-- `dbo.Balances`
-- `dbo.Transactions`
+## Different LocalDB instance?
 
-## Connection string
-
-Must match your LocalDB instance in:
+If you use e.g. `(localdb)\ProjectModels`, update **only** `Data Source` in:
 
 `Wcf-Service/ExchangeOffice/ExchangeOffice/ExchangeOffice.Service/Web.config`
 
-Default used in this project:
-
-```
-Data Source=(localdb)\ProjectModels;Initial Catalog=ExchangeOfficeDb;Integrated Security=True;
-```
-
-If your DB is on `(localdb)\MSSQLLocalDB`, change `Data Source` accordingly.
+Keep `Initial Catalog=ExchangeOfficeDb` and the connection name `ExchangeOfficeDb`.
