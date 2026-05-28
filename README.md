@@ -18,6 +18,13 @@ Gradual build of a currency exchange office: WCF services, NBP rates, later WPF 
 1. Set startup: NbpRatesService + NbpRatesClient.
 2. Press F5. Console prints USD and EUR rates.
 
+### Lab 5–12 — Exchange office (WCF + WPF + SQL)
+1. Open `Wcf-Service/ExchangeOffice/ExchangeOffice/ExchangeOffice.sln`.
+2. Ensure SQL database `ExchangeOfficeDb` exists on `(localdb)\ProjectModels` and run `Database/schema.sql`.
+3. Set multiple startup projects: `ExchangeOffice.Service` + `ExchangeOffice.Client`.
+4. Press F5.
+5. Register → Top up → Buy/Sell → Refresh History on Trading Desk tab.
+
 ### Lab 5 — Exchange office (stub)
 1. Open `ExchangeOffice.sln`.
 2. Run `ExchangeOffice.Service` — service starts; methods not implemented until Lab 6+.

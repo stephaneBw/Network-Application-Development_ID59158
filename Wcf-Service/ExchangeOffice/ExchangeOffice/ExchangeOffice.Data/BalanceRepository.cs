@@ -24,6 +24,19 @@ namespace ExchangeOffice.Data
             }
         }
 
+        // Read balance inside an open transaction (buy/sell consistency).
+        public decimal GetBalance(int userId, string currency, SqlConnection conn, SqlTransaction tx)
+        {
+            string sql = "SELECT Amount FROM Balances WHERE UserId = @UserId AND UPPER(CurrencyCode) = UPPER(@Currency)";
+            using (var cmd = new SqlCommand(sql, conn, tx))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@Currency", currency.Trim());
+                var result = cmd.ExecuteScalar();
+                return result != null ? Convert.ToDecimal(result) : 0m;
+            }
+        }
+
         public void AddToBalance(int userId, string currency, decimal delta, SqlConnection conn, SqlTransaction tx)
         {
             string currencyCode = currency.Trim().ToUpper();

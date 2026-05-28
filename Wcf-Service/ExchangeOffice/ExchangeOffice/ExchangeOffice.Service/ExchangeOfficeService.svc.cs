@@ -52,7 +52,7 @@ namespace ExchangeOffice.Service
 
         public List<TransactionDto> GetTransactionHistory(int userId)
         {
-            throw new NotImplementedException("Lab 12");
+            return _manager.GetTransactionHistory(userId);
         }
 
         public List<RatePointDto> GetHistoricalRates(string currencyCode, DateTime from, DateTime to)

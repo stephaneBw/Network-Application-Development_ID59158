@@ -21,6 +21,7 @@ namespace ExchangeOffice.Client
             TopUpButton.IsEnabled = isEnabled;
             BuyButton.IsEnabled = isEnabled;
             SellButton.IsEnabled = isEnabled;
+            RefreshHistoryButton.IsEnabled = isEnabled;
         }
 
         // Feature 6: Centralized status bar messaging engine
@@ -63,6 +64,7 @@ namespace ExchangeOffice.Client
                 ToggleTradingInterface(true);
                 LogMessage("Account created successfully!");
                 RefreshBalances();
+                RefreshHistory();
 
                 MessageBox.Show($"Welcome, {username}!\nYour account ID is: {userId}", "Registration Confirmed", MessageBoxButton.OK, MessageBoxImage.Information);
                 UsernameTextBox.Text = string.Empty;
@@ -92,6 +94,7 @@ namespace ExchangeOffice.Client
 
                 LogMessage($"Deposited {amount:N2} PLN cleanly.");
                 RefreshBalances();
+                RefreshHistory();
             }
             catch (Exception ex)
             {
@@ -116,6 +119,7 @@ namespace ExchangeOffice.Client
 
                 LogMessage($"Successfully purchased {amount} {currency}!");
                 RefreshBalances();
+                RefreshHistory();
             }
             catch (Exception ex)
             {
@@ -140,6 +144,7 @@ namespace ExchangeOffice.Client
 
                 LogMessage($"Successfully sold {amount} {currency}!");
                 RefreshBalances();
+                RefreshHistory();
             }
             catch (Exception ex)
             {
@@ -162,10 +167,39 @@ namespace ExchangeOffice.Client
                 // Feature 4: Format balances cleanly onto always-visible side tracker panel
                 BalancesTextBlock.Text = $"PLN: {pln:N2} | USD: {usd:N2} | EUR: {eur:N2}";
             }
-            catch (Exception ex)
+            catch
             {
                 BalancesTextBlock.Text = "Ledger Connection Offline";
                 LogMessage("Could not sync ledger balances.", true);
+            }
+        }
+
+        private void RefreshHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshHistory();
+        }
+
+        private void RefreshHistory()
+        {
+            if (_currentUserId == null)
+            {
+                HistoryDataGrid.ItemsSource = null;
+                return;
+            }
+
+            try
+            {
+                var client = new ExchangeOfficeServiceClient();
+                var history = client.GetTransactionHistory(_currentUserId.Value);
+                client.Close();
+
+                HistoryDataGrid.ItemsSource = history ?? Array.Empty<TransactionDto>();
+                LogMessage("Transaction history updated.");
+            }
+            catch (Exception ex)
+            {
+                HistoryDataGrid.ItemsSource = null;
+                LogMessage("Could not load transaction history: " + ex.Message, true);
             }
         }
 

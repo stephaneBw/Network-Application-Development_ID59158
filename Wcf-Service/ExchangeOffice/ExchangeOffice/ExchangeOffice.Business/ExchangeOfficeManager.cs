@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Configuration;
 using ExchangeOffice.Data;
+using ExchangeOffice.Contracts;
 
 namespace ExchangeOffice.Business
 {
@@ -18,7 +20,6 @@ namespace ExchangeOffice.Business
 
         private ExchangeOfficeManager() { }
 
-        // Secure baseline string password encoding converter block
         private string HashPassword(string password)
         {
             var bytes = System.Text.Encoding.UTF8.GetBytes(password);
@@ -41,6 +42,12 @@ namespace ExchangeOffice.Business
         public decimal GetBalance(int userId, string currencyCode)
         {
             return _balanceRepo.GetBalance(userId, currencyCode);
+        }
+
+        // Lab 12 Step 2 — Expose Transaction History logs array downward to repositories
+        public List<TransactionDto> GetTransactionHistory(int userId)
+        {
+            return _txRepo.GetTransactionsByUser(userId);
         }
 
         public void TopUpPln(int userId, decimal amount)
@@ -80,7 +87,9 @@ namespace ExchangeOffice.Business
                     try
                     {
                         decimal costPln = foreignAmount * rate;
-                        decimal currentPln = _balanceRepo.GetBalance(userId, "PLN");
+
+                        // Lab 12 Fix: Get balance inside the open transaction block context to prevent race conditions
+                        decimal currentPln = _balanceRepo.GetBalance(userId, "PLN", conn, tx);
 
                         if (currentPln < costPln)
                             throw new InvalidOperationException($"Insufficient funds. Cost: {costPln} PLN, Available: {currentPln} PLN.");
@@ -112,7 +121,9 @@ namespace ExchangeOffice.Business
                 {
                     try
                     {
-                        decimal currentForeign = _balanceRepo.GetBalance(userId, targetCurrency);
+                        // Lab 12 Fix: Get balance inside the open transaction block context to prevent race conditions
+                        decimal currentForeign = _balanceRepo.GetBalance(userId, targetCurrency, conn, tx);
+
                         if (currentForeign < foreignAmount)
                             throw new InvalidOperationException($"Insufficient balance in portfolio for asset: {targetCurrency}.");
 
